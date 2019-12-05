@@ -155,6 +155,7 @@ def kalman_matching():
     sampling_seconds = 10
     sampling_interval = 15
     prev_resultID = []
+    len_prev_results = 0
 
     count = 0
 
@@ -195,12 +196,18 @@ def kalman_matching():
             if sampling_interval <= 10:
                 sampling_interval = 10
             sampling_seconds += 5
+        elif len(results) > len_prev_results * 2 and len_prev_results > 0:
+            for result in results:
+                if prev_resultID != result[0]:
+                    prev_resultID = result[0]
+                    len_prev_results = len(results)
+                    break
         elif results[0][0] == prev_resultID:
             #increase sampling_interval
             sampling_interval +=5
             sampling_seconds -= 5
             if sampling_seconds <= 10:
-                sampling_seconds = 5
+                sampling_seconds = 7
             prev_resultID = results[0][0]
         else:
             sampling_interval -= 5
